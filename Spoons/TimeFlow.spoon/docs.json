@@ -15,22 +15,22 @@
     "stripped_doc" : [
 
     ],
+    "desc" : "A widget showing time flown in one year.",
     "Deprecated" : [
 
     ],
     "type" : "Module",
-    "desc" : "A widget showing time flown in one year.",
     "Constructor" : [
-
-    ],
-    "doc" : "A widget showing time flown in one year.\n\nDownload: [https:\/\/github.com\/Hammerspoon\/Spoons\/raw\/master\/Spoons\/TimeFlow.spoon.zip](https:\/\/github.com\/Hammerspoon\/Spoons\/raw\/master\/Spoons\/TimeFlow.spoon.zip)",
-    "Field" : [
 
     ],
     "items" : [
 
     ],
+    "doc" : "A widget showing time flown in one year.\n\nDownload: [https:\/\/github.com\/Hammerspoon\/Spoons\/raw\/master\/Spoons\/TimeFlow.spoon.zip](https:\/\/github.com\/Hammerspoon\/Spoons\/raw\/master\/Spoons\/TimeFlow.spoon.zip)",
     "Command" : [
+
+    ],
+    "Field" : [
 
     ],
     "Method" : [

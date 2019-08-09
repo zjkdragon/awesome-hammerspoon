@@ -132,3 +132,6 @@ Finally press `cmd + ctrl + shift + r` to reload the configuration.
 [http://tracesof.net/uebersicht/](http://tracesof.net/uebersicht/)
 
 </details>
+
+## Window Management
+https://github.com/S1ngS1ng/HammerSpoon

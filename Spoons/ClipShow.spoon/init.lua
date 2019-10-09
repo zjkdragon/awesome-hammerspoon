@@ -284,7 +284,7 @@ end
 function obj:openInBrowserWithRef(refstr)
     local querystr = acquireText()
     if refstr then
-        local encoded_query = hs.http.encodeForQuery(refstr .. querystr)
+        local encoded_query = refstr .. hs.http.encodeForQuery(querystr)
         local defaultbrowser = hs.urlevent.getDefaultHandler("http")
         hs.urlevent.openURLWithBundle(encoded_query, defaultbrowser)
     else

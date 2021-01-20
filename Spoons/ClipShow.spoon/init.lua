@@ -18,6 +18,10 @@ obj.canvas = nil
 obj.ccount = nil
 obj.lastsession = nil
 
+obj.lastcount = hs.pasteboard.changeCount()
+obj.pasteboardhistory = {}
+obj.lastPastedata = ""
+
 
 function obj:init()
     obj.canvas = hs.canvas.new({x=0, y=0, w=0, h=0})
@@ -30,7 +34,7 @@ function obj:init()
         type = "segments",
         strokeColor = {hex = "#FFFFFF", alpha = 0.1},
         coordinates = {
-            {x="1%", y="72%"},
+            {x="18%", y="72%"},
             {x="72%", y="72%"}
         }
     }
@@ -44,7 +48,16 @@ function obj:init()
     }
     obj.canvas[4] = {type = "text", text = ""}
     obj.canvas[5] = {type = "text"}
+    obj.canvas[6] = {
+        type = "segments",
+        strokeColor = {hex = "#FFFFFF", alpha = 0.1},
+        coordinates = {
+            {x="18%", y="1%"},
+            {x="18%", y="99%"}
+        }
+    }
     obj.canvas:level(hs.canvas.windowLevels.tornOffMenu)
+    -- obj.initWatch()
 end
 
 local function isFileKinds(val, tbl)
@@ -70,28 +83,26 @@ end
 
 -- Fill clipshowM's keybindings in sidebar
 function obj:fillModalKeys()
-    if #obj.canvas < 6 then
-        local modal = spoon.ModalMgr.modal_list["clipshowM"]
-        if modal then
-            local keys_pool = {}
-            for _, v in ipairs(modal.keys) do
-                table.insert(keys_pool, v.msg)
-            end
-            for idx, val in ipairs(keys_pool) do
-                obj.canvas[idx + 5] = {
-                    type = "text",
-                    text = val,
-                    textFont = "Courier-Bold",
-                    textSize = 16,
-                    textColor = {hex = "#2390FF", alpha = 1},
-                    frame = {
-                        x = "74%",
-                        y = tostring(idx * 30 / (obj.canvas:frame().h - 60)),
-                        w = "24%",
-                        h = tostring(30 / (obj.canvas:frame().h - 60))
-                    }
+    local modal = spoon.ModalMgr.modal_list["clipshowM"]
+    if modal then
+        local keys_pool = {}
+        for _, v in ipairs(modal.keys) do
+            table.insert(keys_pool, v.msg)
+        end
+        for idx, val in ipairs(keys_pool) do
+            obj.canvas[idx + 6] = {
+                type = "text",
+                text = val,
+                textFont = "Courier-Bold",
+                textSize = 16,
+                textColor = {hex = "#2390FF", alpha = 1},
+                frame = {
+                    x = "74%",
+                    y = tostring(idx * 30 / (obj.canvas:frame().h - 60)),
+                    w = "24%",
+                    h = tostring(30 / (obj.canvas:frame().h - 60))
                 }
-            end
+            }
         end
     end
 end
@@ -117,7 +128,7 @@ function obj:processClipboard()
                         type = "image",
                         image = imagedata,
                         frame = {
-                            x = "1%",
+                            x = "19%",
                             y = "1%",
                             w = "70%",
                             h = "70%"
@@ -134,7 +145,7 @@ function obj:processClipboard()
                                 text = file_content,
                                 textSize = 20,
                                 frame = {
-                                    x = "1%",
+                                    x = "19%",
                                     y = "1%",
                                     w = "70%",
                                     h = "70%"
@@ -148,7 +159,7 @@ function obj:processClipboard()
                                 type = "text",
                                 text = dir_name,
                                 frame = {
-                                    x = "1%",
+                                    x = "19%",
                                     y = "1%",
                                     w = "70%",
                                     h = "70%"
@@ -164,7 +175,7 @@ function obj:processClipboard()
                         type = "text",
                         text = stringdata,
                         frame = {
-                            x = "1%",
+                            x = "19%",
                             y = "1%",
                             w = "70%",
                             h = "70%"
@@ -178,7 +189,7 @@ function obj:processClipboard()
                     type = "image",
                     image = imagedata,
                     frame = {
-                        x = "1%",
+                        x = "19%",
                         y = "1%",
                         w = "70%",
                         h = "70%"
@@ -192,7 +203,7 @@ function obj:processClipboard()
                 type = "image",
                 image = imagedata,
                 frame = {
-                    x = "1%",
+                    x = "19%",
                     y = "1%",
                     w = "70%",
                     h = "70%"
@@ -211,7 +222,7 @@ function obj:processClipboard()
                     type = "text",
                     text = stringdata,
                     frame = {
-                        x = "1%",
+                        x = "19%",
                         y = "1%",
                         w = "70%",
                         h = "70%"
@@ -234,7 +245,7 @@ function obj:processClipboard()
             type = "text",
             text = stringdata,
             frame = {
-                x = "1%",
+                x = "19%",
                 y = "1%",
                 w = "70%",
                 h = "70%"
@@ -366,6 +377,27 @@ function obj:saveToFile()
             file_handler:close()
         end
     end
+end
+
+function obj:storeCopy()
+    now = hs.pasteboard.changeCount()
+    if (now > obj.lastcount) then
+        currentClipboard = hs.pasteboard.getContents()
+        while (#obj.pasteboardhistory >= 20) do
+            table.remove(obj.pasteboardhistory,1)
+        end
+        if (currentClipboard ~= nil and currentClipboard ~= obj.lastPastedata) then
+            obj.lastPastedata = currentClipboard
+            table.insert(obj.pasteboardhistory, currentClipboard)
+        end
+        print(#obj.pasteboardhistory)
+        obj.lastcount = now
+    end
+end
+
+function obj:initWatch()
+    timer = hs.timer.new(0.8, obj.storeCopy)
+    timer:start()
 end
 
 --- ClipShow:openWithCommand(command)

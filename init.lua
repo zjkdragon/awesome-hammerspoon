@@ -47,6 +47,7 @@ if not hspoon_list then
         "SpeedMenu",
         "WinWin",
         "FnMate",
+        "ClipboardTool",
     }
 end
 
@@ -108,6 +109,18 @@ if string.len(hsappM_keys[2]) > 0 then
         -- Show the keybindings cheatsheet once appM is activated
         spoon.ModalMgr:activate({"appM"}, "#FFBD2E", true)
     end)
+end
+
+----------------------------------------------------------------------------------------------------
+-- clipT modal environment
+if spoon.ClipboardTool then
+    spoon.ModalMgr:new("clipT")
+    local toolmodal = spoon.ModalMgr.modal_list["clipT"]
+    spoon.ClipboardTool:start()
+    spoon.ClipboardTool:bindHotkeys({
+      show_clipboard = {{"alt", "shift"}, "v"},
+      -- toggle_clipboard = {{"alt", "shift"}, "v"},
+    })
 end
 
 ----------------------------------------------------------------------------------------------------
